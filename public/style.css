@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  animation: change 30s infinite;
+}
+
+@keyframes change {
+  0% {
+    background-color: #cc9b6d;
+  }
+  10% {
+    background-color: #cea75d;
+  }
+  25% {
+    background-color: #f6c069;
+  }
+  35% {
+    background-color: #d5a654;
+  }
+  45% {
+    background-color: #a0937d;
+  }
+  55% {
+    background-color: #f1ca89;
+  }
+  75% {
+    background-color: #f2dac3;
+  }
+  90% {
+    background-color: #f1ca89;
+  }
+  100% {
+    background-color: #cc9b6d;
+  }
+}
