@@ -1,0 +1,8 @@
+footer {
+  margin: 30px auto;
+  margin-bottom: 20px;
+}
+footer > p {
+  display: flex;
+  justify-content: center;
+}

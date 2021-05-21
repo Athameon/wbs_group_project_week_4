@@ -1,0 +1,17 @@
+h1 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  font-size: 46px;
+  text-shadow: 3px 2px 4px black;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("./resources/egyptwworking.jpeg");
+  background-size: cover;
+  height: 9em;
+  opacity: 0.7;
+}
