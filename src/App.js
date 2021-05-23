@@ -86,6 +86,7 @@ class App extends React.Component {
       data: taskListCopy,
       checkedChecboxes: []
     })
+    Storage.storeAllTasks(taskListCopy);
   }
 
   moveBackCallback = (event) => {
@@ -118,6 +119,7 @@ class App extends React.Component {
       data: taskListCopy,
       checkedChecboxes: []
     })
+    Storage.storeAllTasks(taskListCopy);
   }
 
   editTaskFinishedCallback = (id, taskTitle) => {
@@ -129,6 +131,7 @@ class App extends React.Component {
       }
     })
     this.setState({data: tasksListCopy});
+    Storage.storeAllTasks(tasksListCopy);
   }
 
   render() {

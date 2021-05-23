@@ -54,6 +54,13 @@ class Storage {
   
       window.localStorage.setItem('tasks', items_json);
   }
+
+  static storeAllTasks(tasks) {
+    const items_json = JSON.stringify(tasks);
+    console.log("New persisted array: ", items_json);
+
+    window.localStorage.setItem('tasks', items_json);
+  }
 }
 
 export default Storage;
