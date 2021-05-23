@@ -1,7 +1,7 @@
 import React from 'react';
 
 class Task extends React.Component {
-  constructor(args) {
+  constructor(args = {}) {
     console.log(`Create Task object with following values: id: ${args.id}, title: ${args.title}, status: ${args.status}, position: ${args.position}`);
     super(args);
     this._id = args.id;

@@ -3,32 +3,14 @@ import './App.css';
 import Task from './Task';
 import Tasks from './Tasks';
 import Arrows from './Arrows';
+import Storage from './storage';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       taskInput: "",
-      data: [
-        new Task({ 
-          id: uuidv4(),
-          title: "First",
-          status: "todo",
-          position: 0
-        },),
-        new Task({ 
-          id: uuidv4(),
-          title: "Second",
-          status: "done",
-          position: 1
-        },),
-        new Task({ 
-          id: uuidv4(),
-          title: "Third",
-          status: "done",
-          position: 2
-        },)
-      ],
+      data: Storage.restoreTasks(),
       checkedChecboxes: []
     }
   }
@@ -79,8 +61,6 @@ class App extends React.Component {
     this.state.checkedChecboxes.forEach(checkboxId => {
       markedTasksToMove.push(...this.state.data.filter(task => task.id === checkboxId));
     })
-    // const tasksToMove = markedTasksToMove.filter(task => 
-    //   task.status === "todo" || task.status === "inProgress");
     
     console.log(markedTasksToMove);
     let taskListCopy = [...this.state.data];
@@ -118,7 +98,6 @@ class App extends React.Component {
     
     console.log("Tasks to move", tasksToMove);
     let taskListCopy = [...this.state.data];
-    
     markedTasksToMove.forEach(checkedTasks => {
       for(let i = 0; i < taskListCopy.length; i++) {
         const task = taskListCopy[i];
@@ -133,18 +112,6 @@ class App extends React.Component {
         }
       }
     })
-
-
-
-    // taskListCopy.forEach(task => {
-    //   markedTasksToMove.forEach(checkboxId => {
-    //     if (task.status === 'inProgress') {
-    //       task.status = 'todo';
-    //     } else if(task.status === 'done') {
-    //       task.status = 'inProgress';
-    //     }
-    //   })
-    // })
 
     this.setState({
       data: taskListCopy,
