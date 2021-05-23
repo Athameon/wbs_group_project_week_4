@@ -27,6 +27,22 @@ class Task extends React.Component {
     this._status = status;
   }
 
+  clickedPen() {
+    if (this.state.editMode) {
+      this.finishEditTask();
+    } else {
+      this.setState({ editMode: true } );
+    }
+  }
+
+  finishEditTask() {
+    this.props.editTaskFinishedCallback(this.id, this.state.taskTitle);
+    this.setState({ editMode: false } );
+  }
+  editTask() {
+
+  }
+
   render() {
     return (
       <div className="item" id={this.id}>
@@ -34,16 +50,16 @@ class Task extends React.Component {
           <input onChange={(event) => this.props.checkedCheckboxCallback(this.id, event)} type="checkbox" />
           { this.state.editMode? 
             <input 
-              onChange={(event) => this.setState({ taskTitle: event.target.value } )} 
-              onKeyUp={(event) => event.key === 'Enter' && this.setState({editMode: false})} 
-              className="edit" 
+              onChange={(event) => this.setState({ taskTitle: event.target.value } )}
+              onKeyUp={(event) => {event.key === 'Enter' && this.finishEditTask()}} 
+              className="edit"
               type="text" 
               value={this.state.taskTitle} />
           : <span className="text">{this.state.taskTitle}</span> 
           }
         </div>
         <div className="itemItems">
-          <i onClick={() => this.setState({ editMode: !this.state.editMode } )} className="fas fa-pen"></i>
+          <i onClick={() => this.clickedPen()} className="fas fa-pen"></i>
           <i onClick={() => this.props.deleteTaskCallback(this.id)} className="fas fa-trash-alt"></i>
         </div>
       </div>

@@ -5,6 +5,9 @@ class Storage {
     let serializedTasksJsonObjects = window.localStorage.getItem('tasks');
     // const serializedTasksJsonObjects = '[{"_title":"Clean car","_status":"todo","_position":8,"_id":"ad260040e-249a-4e8f-aae5-d11ac25dc40d"},{"_title":"Build houise","_status":"todo","_position":9,"_id":"a7e077e8c-5b1e-4e70-9c6a-da99f118b13b"}]';
     console.log("Called method restoreTasks. Following tasks are persisted: " , serializedTasksJsonObjects);
+    if(serializedTasksJsonObjects === "") {
+      return [];
+    }
     let taskJsonObjects = JSON.parse(serializedTasksJsonObjects);
     console.log("Following stored tasks get restored:", taskJsonObjects);
     if(taskJsonObjects === null) {
@@ -25,9 +28,12 @@ class Storage {
   static storeTask(task) {
       console.log("Called method 'storeTask");
       let serializedTasksJsonObjects = window.localStorage.getItem('tasks');
-      let taskJsonObjects = JSON.parse(serializedTasksJsonObjects);
-      if(taskJsonObjects===null) {
-        taskJsonObjects = [];
+      let taskJsonObjects = [];
+      if (serializedTasksJsonObjects !== "") {
+        taskJsonObjects = JSON.parse(serializedTasksJsonObjects);
+        if(taskJsonObjects===null) {
+          taskJsonObjects = [];
+        }
       }
 
       const taskList = [];

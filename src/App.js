@@ -120,6 +120,17 @@ class App extends React.Component {
     })
   }
 
+  editTaskFinishedCallback = (id, taskTitle) => {
+    console.log("Finished editing task with id: ", id);
+    const tasksListCopy = [...this.state.data];
+    tasksListCopy.forEach(task => {
+      if (task.id === id) {
+        task.title = taskTitle;
+      }
+    })
+    this.setState({data: tasksListCopy});
+  }
+
   render() {
 
     const todoTask = <Tasks taskList={this.state.data.filter(task => task.status==="todo")}/>;
@@ -147,6 +158,7 @@ class App extends React.Component {
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
+              editTaskFinishedCallback = {this.editTaskFinishedCallback}
             />
           </section>
           <section className="arrows">
@@ -160,6 +172,7 @@ class App extends React.Component {
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
+              editTaskFinishedCallback = {this.editTaskFinishedCallback}
             />
           </section>
           <section className="arrows">
@@ -173,6 +186,7 @@ class App extends React.Component {
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
+              editTaskFinishedCallback = {this.editTaskFinishedCallback}
             />
           </section>
         </div>
