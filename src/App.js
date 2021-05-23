@@ -31,16 +31,17 @@ class App extends React.Component {
     }
     console.log(Tasks);
     const tempData = this.state.data;
-    tempData.push(new Task({ 
-        id: uuidv4(),
-        title: this.state.taskInput,
-        status: "todo",
-        position: 5
-      }))
+    const newTask = new Task({ 
+      id: uuidv4(),
+      title: this.state.taskInput,
+      status: "todo",
+      position: 5
+    })
+    tempData.push(newTask)
     this.setState({
       data: tempData
     })
-    console.log(this.state.data);
+    Storage.storeTask(newTask);
   }
 
   checkedCheckboxCallback = (taskId, event) => {
