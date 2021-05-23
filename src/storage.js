@@ -24,36 +24,6 @@ class Storage {
     });
     return taskList;
   }
-    
-  static storeTask(task) {
-      console.log("Called method 'storeTask");
-      let serializedTasksJsonObjects = window.localStorage.getItem('tasks');
-      let taskJsonObjects = [];
-      if (serializedTasksJsonObjects !== "") {
-        taskJsonObjects = JSON.parse(serializedTasksJsonObjects);
-        if(taskJsonObjects===null) {
-          taskJsonObjects = [];
-        }
-      }
-
-      const taskList = [];
-      taskJsonObjects.forEach(jsonTask => {
-        taskList.push(Object.assign(new Task, jsonTask));
-      });
-
-      const filteredTasks = taskList.filter(currentTask => currentTask.id === task.id);
-      if(filteredTasks.length > 0) {  // update
-        console.log("Update task with id: " + task.id);
-        filteredTasks[0] = task;
-      } else {  // insert
-        console.log("Insert task with id: " + task.id);
-        taskJsonObjects.push(task);
-      }
-      const items_json = JSON.stringify(taskJsonObjects);
-      console.log("New persisted array: ", items_json);
-  
-      window.localStorage.setItem('tasks', items_json);
-  }
 
   static storeAllTasks(tasks) {
     const items_json = JSON.stringify(tasks);

@@ -30,18 +30,18 @@ class App extends React.Component {
       return;
     }
     console.log(Tasks);
-    const tempData = this.state.data;
+    const taskListCopy = this.state.data;
     const newTask = new Task({ 
       id: uuidv4(),
       title: this.state.taskInput,
       status: "todo",
       position: 5
     })
-    tempData.push(newTask)
+    taskListCopy.push(newTask)
     this.setState({
-      data: tempData
+      data: taskListCopy
     })
-    Storage.storeTask(newTask);
+    Storage.storeAllTasks(taskListCopy);
   }
 
   checkedCheckboxCallback = (taskId, event) => {
