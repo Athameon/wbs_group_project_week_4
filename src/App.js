@@ -21,7 +21,10 @@ class App extends React.Component {
 
   deleteTaskCallback = (taskId) => {      
     console.log('Delete task with id: ', taskId);
-    this.setState({data: this.state.data.filter(task => task.id !== taskId)})}
+    const taskListCopy = this.state.data.filter(task => task.id !== taskId)
+    this.setState({data: taskListCopy})
+    Storage.storeAllTasks(taskListCopy);
+  }
 
   createNewTask(event) {
     console.log("Called createNewTask with inputValue: " + this.state.taskInput);
