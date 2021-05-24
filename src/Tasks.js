@@ -9,6 +9,7 @@ class Tasks extends React.Component {
         id={d.id}
         title={d.title}
         status={d.status}
+        position={d.position}
         deleteTaskCallback = {this.props.deleteTaskCallback}
         checkedCheckboxCallback = {this.props.checkedCheckboxCallback}
         editTaskFinishedCallback = {this.props.editTaskFinishedCallback}

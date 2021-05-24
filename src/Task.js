@@ -27,6 +27,13 @@ class Task extends React.Component {
     this._status = status;
   }
 
+  get position() {
+    return this._position;
+  }
+  set position(position) {
+    this._position = position;
+  }
+
   clickedPen() {
     if (this.state.editMode) {
       this.finishEditTask();

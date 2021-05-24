@@ -34,11 +34,17 @@ class App extends React.Component {
     }
     console.log(Tasks);
     const taskListCopy = this.state.data;
+    const sortedToDoTaskList = taskListCopy.filter(currentTask => currentTask.status === 'todo').sort((first, second) => second.position - first.position);
+    console.log("Sorted todo list: ", sortedToDoTaskList);
+    let newTaskPosition = 0;
+    if (sortedToDoTaskList.length > 0) {
+      newTaskPosition = sortedToDoTaskList[0].position + 1;
+    }
     const newTask = new Task({ 
       id: uuidv4(),
       title: this.state.taskInput,
       status: "todo",
-      position: 5
+      position: newTaskPosition
     })
     taskListCopy.push(newTask)
     this.setState({
