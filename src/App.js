@@ -59,16 +59,14 @@ class App extends React.Component {
     this.setState({checkedChecboxes: checkedCheckboxesCopy})
   }
 
-  moveNextCallback = (event) => {
+  moveTaskCallback = (forward) => {
     console.log("Clicked next arrow. Checked checkBoxes: " + this.state.checkedChecboxes);
     let markedTasksToMove =[];
     this.state.checkedChecboxes.forEach(checkboxId => {
       markedTasksToMove.push(...this.state.data.filter(task => task.id === checkboxId));
     })
     
-    console.log(markedTasksToMove);
     let taskListCopy = [...this.state.data];
-
     markedTasksToMove.forEach(checkedTasks => {
       for(let i = 0; i < taskListCopy.length; i++) {
         const task = taskListCopy[i];
@@ -76,43 +74,11 @@ class App extends React.Component {
         if(task.id === checkedTasks.id) {
           console.log("move task task.id");
           if (task.status === 'todo') {
-            
-            task.status = 'inProgress';
+            task.status = forward? 'inProgress' : 'todo';
           } else if(task.status === 'inProgress') {
-            task.status = 'done';
-          }
-        }
-      }
-    })
-
-    this.setState({
-      data: taskListCopy,
-      checkedChecboxes: []
-    })
-    Storage.storeAllTasks(taskListCopy);
-  }
-
-  moveBackCallback = (event) => {
-    console.log("Clicked back arrow");
-    let markedTasksToMove =[];
-    this.state.checkedChecboxes.forEach(checkboxId => {
-      markedTasksToMove.push(...this.state.data.filter(task => task.id === checkboxId));
-    })
-    const tasksToMove = markedTasksToMove.filter(task => 
-      task.status === "inProgress" || task.status === "done");
-    
-    console.log("Tasks to move", tasksToMove);
-    let taskListCopy = [...this.state.data];
-    markedTasksToMove.forEach(checkedTasks => {
-      for(let i = 0; i < taskListCopy.length; i++) {
-        const task = taskListCopy[i];
-        console.log("check...", checkedTasks.id);
-        if(task.id === checkedTasks.id) {
-          console.log("move task task.id");
-          if (task.status === 'inProgress') {
-            task.status = 'todo';
+            task.status = forward? 'done' : 'todo';
           } else if(task.status === 'done') {
-            task.status = 'inProgress';
+            task.status = forward? 'done' : 'inProgress';
           }
         }
       }
@@ -168,7 +134,7 @@ class App extends React.Component {
             />
           </section>
           <section className="arrows">
-          <Arrows moveBack={this.moveBackCallback} moveNext={this.moveNextCallback} />
+          <Arrows moveTaskCallback={this.moveTaskCallback} />
           </section>
           <section className="section" id="inProgress">
             <h2>In Progress</h2>
@@ -182,7 +148,7 @@ class App extends React.Component {
             />
           </section>
           <section className="arrows">
-            <Arrows moveBack={this.moveBackCallback} moveNext={this.moveNextCallback} />
+            <Arrows moveTaskCallback={this.moveTaskCallback} />
           </section>
           <section className="section" id="done">
             <h2>Done</h2>
