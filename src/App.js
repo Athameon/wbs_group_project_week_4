@@ -119,7 +119,6 @@ class App extends React.Component {
 
   render() {
 
-    const todoTask = <Tasks taskList={this.state.data.filter(task => task.status==="todo")}/>;
     return (
       <div>
         <div className="newItem">
@@ -140,7 +139,7 @@ class App extends React.Component {
             <h2>ToDo</h2>
             <Tasks 
               taskList={
-                this.state.data.filter(task => task.status === "todo")
+                this.state.data.filter(task => task.status === "todo").sort((first, second) => first.position - second.position)
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
@@ -154,7 +153,7 @@ class App extends React.Component {
             <h2>In Progress</h2>
             <Tasks 
               taskList={
-                this.state.data.filter(task => task.status === "inProgress")
+                this.state.data.filter(task => task.status === "inProgress").sort((first, second) => first.position - second.position)
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
@@ -168,7 +167,7 @@ class App extends React.Component {
             <h2>Done</h2>
             <Tasks 
               taskList={
-                this.state.data.filter(task => task.status === "done")
+                this.state.data.filter(task => task.status === "done").sort((first, second) => first.position - second.position)
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
