@@ -3,32 +3,14 @@ import './App.css';
 import Task from './Task';
 import Tasks from './Tasks';
 import Arrows from './Arrows';
+import Storage from './storage';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       taskInput: "",
-      data: [
-        new Task({ 
-          id: uuidv4(),
-          title: "First",
-          status: "todo",
-          position: 0
-        },),
-        new Task({ 
-          id: uuidv4(),
-          title: "Second",
-          status: "done",
-          position: 1
-        },),
-        new Task({ 
-          id: uuidv4(),
-          title: "Third",
-          status: "done",
-          position: 2
-        },)
-      ],
+      data: Storage.restoreTasks(),
       checkedChecboxes: []
     }
   }
@@ -39,7 +21,10 @@ class App extends React.Component {
 
   deleteTaskCallback = (taskId) => {      
     console.log('Delete task with id: ', taskId);
-    this.setState({data: this.state.data.filter(task => task.id !== taskId)})}
+    const taskListCopy = this.state.data.filter(task => task.id !== taskId)
+    this.setState({data: taskListCopy})
+    Storage.storeAllTasks(taskListCopy);
+  }
 
   createNewTask(event) {
     console.log("Called createNewTask with inputValue: " + this.state.taskInput);
@@ -48,17 +33,23 @@ class App extends React.Component {
       return;
     }
     console.log(Tasks);
-    const tempData = this.state.data;
-    tempData.push(new Task({ 
-        id: uuidv4(),
-        title: this.state.taskInput,
-        status: "todo",
-        position: 5
-      }))
-    this.setState({
-      data: tempData
+    const taskListCopy = this.state.data;
+    const sortedToDoTaskList = taskListCopy.filter(currentTask => currentTask.status === 'todo').sort((first, second) => second.position - first.position);
+    let newTaskPosition = 0;
+    if (sortedToDoTaskList.length > 0) {
+      newTaskPosition = sortedToDoTaskList[0].position + 1;
+    }
+    const newTask = new Task({ 
+      id: uuidv4(),
+      title: this.state.taskInput,
+      status: "todo",
+      position: newTaskPosition
     })
-    console.log(this.state.data);
+    taskListCopy.push(newTask)
+    this.setState({
+      data: taskListCopy
+    })
+    Storage.storeAllTasks(taskListCopy);
   }
 
   checkedCheckboxCallback = (taskId, event) => {
@@ -73,30 +64,28 @@ class App extends React.Component {
     this.setState({checkedChecboxes: checkedCheckboxesCopy})
   }
 
-  moveNextCallback = (event) => {
+  moveTaskCallback = (forward) => {
     console.log("Clicked next arrow. Checked checkBoxes: " + this.state.checkedChecboxes);
     let markedTasksToMove =[];
     this.state.checkedChecboxes.forEach(checkboxId => {
       markedTasksToMove.push(...this.state.data.filter(task => task.id === checkboxId));
     })
-    // const tasksToMove = markedTasksToMove.filter(task => 
-    //   task.status === "todo" || task.status === "inProgress");
     
-    console.log(markedTasksToMove);
     let taskListCopy = [...this.state.data];
-
     markedTasksToMove.forEach(checkedTasks => {
       for(let i = 0; i < taskListCopy.length; i++) {
         const task = taskListCopy[i];
-        console.log("check...", checkedTasks.id);
         if(task.id === checkedTasks.id) {
-          console.log("move task task.id");
+          let newTaskStatus = "";
           if (task.status === 'todo') {
-            
-            task.status = 'inProgress';
+            newTaskStatus = forward? 'inProgress' : 'todo';
           } else if(task.status === 'inProgress') {
-            task.status = 'done';
+            newTaskStatus = forward? 'done' : 'todo';
+          } else if(task.status === 'done') {
+            newTaskStatus = forward? 'done' : 'inProgress';
           }
+          this.setNewTaskPosition(taskListCopy, task, newTaskStatus);
+          task.status = newTaskStatus;
         }
       }
     })
@@ -105,56 +94,31 @@ class App extends React.Component {
       data: taskListCopy,
       checkedChecboxes: []
     })
+    Storage.storeAllTasks(taskListCopy);
+  }
+  setNewTaskPosition(taskListCopy, task, newTaskStatus) {
+    const sortedTaskList = taskListCopy.filter(currentTask => currentTask.status === newTaskStatus).sort((first, second) => second.position - first.position);
+    let newTaskPosition = 0;
+    if (sortedTaskList.length > 0) {
+      newTaskPosition = sortedTaskList[0].position + 1;
+    }
+    task.position = newTaskPosition;
   }
 
-  moveBackCallback = (event) => {
-    console.log("Clicked back arrow");
-    let markedTasksToMove =[];
-    this.state.checkedChecboxes.forEach(checkboxId => {
-      markedTasksToMove.push(...this.state.data.filter(task => task.id === checkboxId));
-    })
-    const tasksToMove = markedTasksToMove.filter(task => 
-      task.status === "inProgress" || task.status === "done");
-    
-    console.log("Tasks to move", tasksToMove);
-    let taskListCopy = [...this.state.data];
-    
-    markedTasksToMove.forEach(checkedTasks => {
-      for(let i = 0; i < taskListCopy.length; i++) {
-        const task = taskListCopy[i];
-        console.log("check...", checkedTasks.id);
-        if(task.id === checkedTasks.id) {
-          console.log("move task task.id");
-          if (task.status === 'inProgress') {
-            task.status = 'todo';
-          } else if(task.status === 'done') {
-            task.status = 'inProgress';
-          }
-        }
+  editTaskFinishedCallback = (id, taskTitle) => {
+    console.log("Finished editing task with id: ", id);
+    const tasksListCopy = [...this.state.data];
+    tasksListCopy.forEach(task => {
+      if (task.id === id) {
+        task.title = taskTitle;
       }
     })
-
-
-
-    // taskListCopy.forEach(task => {
-    //   markedTasksToMove.forEach(checkboxId => {
-    //     if (task.status === 'inProgress') {
-    //       task.status = 'todo';
-    //     } else if(task.status === 'done') {
-    //       task.status = 'inProgress';
-    //     }
-    //   })
-    // })
-
-    this.setState({
-      data: taskListCopy,
-      checkedChecboxes: []
-    })
+    this.setState({data: tasksListCopy});
+    Storage.storeAllTasks(tasksListCopy);
   }
 
   render() {
 
-    const todoTask = <Tasks taskList={this.state.data.filter(task => task.status==="todo")}/>;
     return (
       <div>
         <div className="newItem">
@@ -175,36 +139,39 @@ class App extends React.Component {
             <h2>ToDo</h2>
             <Tasks 
               taskList={
-                this.state.data.filter(task => task.status === "todo")
+                this.state.data.filter(task => task.status === "todo").sort((first, second) => first.position - second.position)
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
+              editTaskFinishedCallback = {this.editTaskFinishedCallback}
             />
           </section>
           <section className="arrows">
-          <Arrows moveBack={this.moveBackCallback} moveNext={this.moveNextCallback} />
+          <Arrows moveTaskCallback={this.moveTaskCallback} />
           </section>
           <section className="section" id="inProgress">
             <h2>In Progress</h2>
             <Tasks 
               taskList={
-                this.state.data.filter(task => task.status === "inProgress")
+                this.state.data.filter(task => task.status === "inProgress").sort((first, second) => first.position - second.position)
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
+              editTaskFinishedCallback = {this.editTaskFinishedCallback}
             />
           </section>
           <section className="arrows">
-            <Arrows moveBack={this.moveBackCallback} moveNext={this.moveNextCallback} />
+            <Arrows moveTaskCallback={this.moveTaskCallback} />
           </section>
           <section className="section" id="done">
             <h2>Done</h2>
             <Tasks 
               taskList={
-                this.state.data.filter(task => task.status === "done")
+                this.state.data.filter(task => task.status === "done").sort((first, second) => first.position - second.position)
               }
               deleteTaskCallback = {this.deleteTaskCallback}
               checkedCheckboxCallback = {this.checkedCheckboxCallback}
+              editTaskFinishedCallback = {this.editTaskFinishedCallback}
             />
           </section>
         </div>
