@@ -35,7 +35,6 @@ class App extends React.Component {
     console.log(Tasks);
     const taskListCopy = this.state.data;
     const sortedToDoTaskList = taskListCopy.filter(currentTask => currentTask.status === 'todo').sort((first, second) => second.position - first.position);
-    console.log("Sorted todo list: ", sortedToDoTaskList);
     let newTaskPosition = 0;
     if (sortedToDoTaskList.length > 0) {
       newTaskPosition = sortedToDoTaskList[0].position + 1;
@@ -76,16 +75,17 @@ class App extends React.Component {
     markedTasksToMove.forEach(checkedTasks => {
       for(let i = 0; i < taskListCopy.length; i++) {
         const task = taskListCopy[i];
-        console.log("check...", checkedTasks.id);
         if(task.id === checkedTasks.id) {
-          console.log("move task task.id");
+          let newTaskStatus = "";
           if (task.status === 'todo') {
-            task.status = forward? 'inProgress' : 'todo';
+            newTaskStatus = forward? 'inProgress' : 'todo';
           } else if(task.status === 'inProgress') {
-            task.status = forward? 'done' : 'todo';
+            newTaskStatus = forward? 'done' : 'todo';
           } else if(task.status === 'done') {
-            task.status = forward? 'done' : 'inProgress';
+            newTaskStatus = forward? 'done' : 'inProgress';
           }
+          this.setNewTaskPosition(taskListCopy, task, newTaskStatus);
+          task.status = newTaskStatus;
         }
       }
     })
@@ -95,6 +95,14 @@ class App extends React.Component {
       checkedChecboxes: []
     })
     Storage.storeAllTasks(taskListCopy);
+  }
+  setNewTaskPosition(taskListCopy, task, newTaskStatus) {
+    const sortedTaskList = taskListCopy.filter(currentTask => currentTask.status === newTaskStatus).sort((first, second) => second.position - first.position);
+    let newTaskPosition = 0;
+    if (sortedTaskList.length > 0) {
+      newTaskPosition = sortedTaskList[0].position + 1;
+    }
+    task.position = newTaskPosition;
   }
 
   editTaskFinishedCallback = (id, taskTitle) => {
