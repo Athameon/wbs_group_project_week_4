@@ -77,12 +77,26 @@ class App extends React.Component {
         const task = taskListCopy[i];
         if(task.id === checkedTasks.id) {
           let newTaskStatus = "";
-          if (task.status === 'todo') {
+          if (task.status === 'todo' && !forward) {
+            newTaskStatus = 'todo';
+          }
+          if (task.status === 'todo' && forward) {
             newTaskStatus = forward? 'inProgress' : 'todo';
+            this.setState({
+              checkedChecboxes: []
+            })
           } else if(task.status === 'inProgress') {
             newTaskStatus = forward? 'done' : 'todo';
-          } else if(task.status === 'done') {
+            this.setState({
+              checkedChecboxes: []
+            })
+          } else if(task.status === 'done' && !forward) {
             newTaskStatus = forward? 'done' : 'inProgress';
+            this.setState({
+              checkedChecboxes: []
+            })
+          }else if(task.status === 'done' && forward) {
+            newTaskStatus = 'done';
           }
           this.setNewTaskPosition(taskListCopy, task, newTaskStatus);
           task.status = newTaskStatus;
@@ -92,7 +106,7 @@ class App extends React.Component {
 
     this.setState({
       data: taskListCopy,
-      checkedChecboxes: []
+      //checkedChecboxes: []
     })
     Storage.storeAllTasks(taskListCopy);
   }
