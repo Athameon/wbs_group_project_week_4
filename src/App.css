@@ -78,21 +78,6 @@ h2 {
   margin: 7px;
   margin-right: 10px;
 }
-.arrows {
-  align-self: center;
-  border: 2px solid grey;
-  border-radius: 40px;
-  background-color: bisque;
-  padding: 5px;
-}
-
-.arrows i {
-  cursor: pointer;
-}
-
-.arrows i:first-child {
-  margin-bottom: 40px;
-}
 
 .horizontalArrows {
   display: none;

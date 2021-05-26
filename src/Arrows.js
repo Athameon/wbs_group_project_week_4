@@ -1,4 +1,5 @@
 import React from 'react'
+import './Arrows.css'
 
 class Arrow extends React.Component {
   constructor(props) {

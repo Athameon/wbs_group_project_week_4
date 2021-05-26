@@ -1,0 +1,19 @@
+.arrows {
+  align-self: center;
+  border: 5px solid grey;
+  border-radius: 40px;
+  background-color: bisque;
+  padding: 5px;
+  margin: 20px 20px;
+}
+
+.arrows i {
+  cursor: pointer;
+  display: flex;
+  
+}
+
+.arrows i:first-child {
+  margin: 50 auto;
+}
+
