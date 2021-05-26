@@ -71,33 +71,35 @@ class App extends React.Component {
       markedTasksToMove.push(...this.state.data.filter(task => task.id === checkboxId));
     })
     
+    let checkBoxesStayChecked = [];
     let taskListCopy = [...this.state.data];
     markedTasksToMove.forEach(checkedTasks => {
       for(let i = 0; i < taskListCopy.length; i++) {
         const task = taskListCopy[i];
+        
         if(task.id === checkedTasks.id) {
           let newTaskStatus = "";
-          if (task.status === 'todo' && !forward) {
-            newTaskStatus = 'todo';
+          if (task.status === 'todo') {
+            if(forward){
+              newTaskStatus = 'inProgress';
+            }else{
+              newTaskStatus = 'todo';
+              checkBoxesStayChecked.push(checkedTasks.id);
+            }
           }
-          if (task.status === 'todo' && forward) {
-            newTaskStatus = forward? 'inProgress' : 'todo';
-            this.setState({
-              checkedChecboxes: []
-            })
-          } else if(task.status === 'inProgress') {
+          
+          if(task.status === 'inProgress') {
             newTaskStatus = forward? 'done' : 'todo';
-            this.setState({
-              checkedChecboxes: []
-            })
-          } else if(task.status === 'done' && !forward) {
-            newTaskStatus = forward? 'done' : 'inProgress';
-            this.setState({
-              checkedChecboxes: []
-            })
-          }else if(task.status === 'done' && forward) {
-            newTaskStatus = 'done';
           }
+          
+          if (task.status === 'done') {
+            if(!forward){
+              newTaskStatus = 'inProgress';
+            }else{
+              newTaskStatus = 'done';
+              checkBoxesStayChecked.push(checkedTasks.id);
+            }
+          }  
           this.setNewTaskPosition(taskListCopy, task, newTaskStatus);
           task.status = newTaskStatus;
         }
@@ -106,7 +108,7 @@ class App extends React.Component {
 
     this.setState({
       data: taskListCopy,
-      //checkedChecboxes: []
+      checkedChecboxes: checkBoxesStayChecked
     })
     Storage.storeAllTasks(taskListCopy);
   }
